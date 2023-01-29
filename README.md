@@ -5,30 +5,34 @@ This tutorial shows you how to bootstrap Flux to a Kubernetes cluster and deploy
 Before you begin
 To follow the guide, you need the following:
 
-A Kubernetes cluster. We recommend Kubernetes kind for trying Flux out in a local development environment.
-A GitHub personal access token with repo permissions. See the GitHub documentation on creating a personal access token.
-Objectives
+# A Kubernetes cluster. We recommend Kubernetes kind for trying Flux out in a local development environment.
+# A GitHub personal access token with repo permissions. See the GitHub documentation on creating a personal access token.
+
+# Objectives
+
 Bootstrap Flux on a Kubernetes Cluster
 Deploy a sample application using Flux
 Customize application configuration through Kustomize patches
 Install the Flux CLI
 The flux command-line interface (CLI) is used to bootstrap and interact with Flux.
 
-To install the CLI with Homebrew run:
+# To install the CLI with Homebrew run:
 
 brew install fluxcd/tap/flux
-For other installation methods, see the CLI install documentation.
 
-Export your credentials
+
+# Export your credentials
 Export your GitHub personal access token and username:
 
 export GITHUB_TOKEN=<your-token>
 export GITHUB_USER=<your-username>
-Check your Kubernetes cluster
+
+# Check your Kubernetes cluster 
 Check you have everything needed to run Flux by running the following command:
 
 flux check --pre
-The output is similar to:
+
+ # The output is similar to:
 
 ► checking prerequisites
 ✔ kubernetes 1.22.2 >=1.20.6
@@ -70,12 +74,14 @@ Creates a git repository fleet-infra on your GitHub account
 Adds Flux component manifests to the repository
 Deploys Flux Components to your Kubernetes Cluster
 Configures Flux components to track the path /clusters/my-cluster/ in the repository
-Clone the git repository
+  
+ # Clone the git repository
 Clone the fleet-infra repository to your local machine:
 
 git clone https://github.com/$GITHUB_USER/fleet-infra
 cd fleet-infra
-Add podinfo repository to Flux
+  
+ # Add podinfo repository to Flux
 This example uses a public repository github.com/stefanprodan/podinfo, podinfo is a tiny web application made with Go.
 
 Create a GitRepository manifest pointing to podinfo repository’s master branch:
@@ -101,7 +107,8 @@ Commit and push the podinfo-source.yaml file to the fleet-infra repository:
 
 git add -A && git commit -m "Add podinfo GitRepository"
 git push
-Deploy podinfo application
+
+   # Deploy podinfo application
 Configure Flux to build and apply the kustomize directory located in the podinfo repository.
 
 Use the flux create command to create a Kustomization that applies the podinfo deployment.
@@ -143,7 +150,7 @@ fleet-infra
         │   └── kustomization.yaml
         ├── podinfo-kustomization.yaml
         └── podinfo-source.yaml
-Watch Flux sync the application
+ # Watch Flux sync the application
 Use the flux get command to watch the podinfo app
 
 flux get kustomizations --watch
@@ -171,14 +178,14 @@ When you alter the podinfo deployment using kubectl edit, the changes are revert
 Suspend updates
 Suspending updates to a kustomization allows you to directly edit objects applied from a kustomization, without your changes being reverted by the state in Git.
 
-To suspend updates for a kustomization, run the command flux suspend kustomization <name>.
+ # To suspend updates for a kustomization, run the command flux suspend kustomization <name>.
 
-To resume updates run the command flux resume kustomization <name>.
+ # To resume updates run the command flux resume kustomization <name>.
 
 Customize podinfo deployment
 To customize a deployment from a repository you don’t control, you can use Flux in-line patches. The following example shows how to use in-line patches to change the podinfo deployment.
 
-Add the following to the field spec of your podinfo-kustomization.yaml file:
+ # Add the following to the field spec of your podinfo-kustomization.yaml file:
 
   patches:
     - patch: |-
@@ -197,7 +204,7 @@ git add -A && git commit -m "Increase podinfo minimum replicas"
 git push
 After the synchronization finishes, running kubectl get pods should display 3 pods.
 
-Multi-cluster Setup
+ # Multi-cluster Setup
 To use Flux to manage more than one cluster or promote deployments from staging to production, take a look at the two approaches in the repositories listed below.
 
 https://github.com/fluxcd/flux2-kustomize-helm-example
